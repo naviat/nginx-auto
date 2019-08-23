@@ -190,7 +190,23 @@ case $OPTION in
 		if [[ ! -d /etc/nginx/conf.d ]]; then
 			mkdir -p /etc/nginx/conf.d
 		fi
-
+		if [[ ! -d /etc/nginx/certs ]] 
+		then
+			mkdir -p /etc/nginx/certs
+			if [[ ! -e /etc/nginx/certs/rpc.tomochain.com.crt && ! -e /etc/nginx/certs/rpc.tomochain.com.key ]] 
+			then
+				openssl req \
+       					-newkey rsa:2048 -nodes -keyout /etc/nginx/certs/rpc.tomochain.com.key \
+       					-x509 -days 3650 -out /etc/nginx/certs/rpc.tomochain.com.crt 
+			fi
+		else
+			if [[ ! -e /etc/nginx/certs/rpc.tomochain.com.crt && ! -e /etc/nginx/certs/rpc.tomochain.com.key ]] 
+			then
+				openssl req \
+       					-newkey rsa:2048 -nodes -keyout /etc/nginx/certs/rpc.tomochain.com.key \
+       					-x509 -days 3650 -out /etc/nginx/certs/rpc.tomochain.com.crt
+			fi
+		fi
 		# Restart Nginx
 		systemctl restart nginx
 
